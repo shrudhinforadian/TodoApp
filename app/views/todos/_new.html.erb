@@ -1,0 +1,15 @@
+<div class="">
+
+  <div class="form-horizontal">
+    <%= form_with(model: [ @current_user, @current_user.todos.build ],
+     local: true) do |form| %>
+
+      <p >
+        <%= form.text_field :body ,:class=>"input-todo form-control",
+        :placeholder=>"Enter todo" ,:id=>"focusedInput"%>
+      </p>
+
+    </div>
+  <% end %>
+
+</div>

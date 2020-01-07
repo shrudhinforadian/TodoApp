@@ -1,0 +1,48 @@
+<div class="container" >
+  <div class="section-image">
+  <%= image_tag "check.png" %>
+  </div>
+  <div class="header-section">
+    <div class=" input-search">
+      <input class="form-control" id="myInput" type="text" placeholder="Search">
+    </div>
+    <div class="current-user">
+      <%if   @current_user %>
+        <div class="user-name">
+          <%= @current_user.name %>
+        </div>
+        <div class="logout-link">
+          <%= link_to 'Logout', logout_path ,:class=>" card-link "%>
+        </div>
+      <%end%>
+    </div>
+  </div>
+  <br>
+  <%= render 'new'%>
+  <div class="btn-group" role="group" aria-label="Basic example">
+    <%= link_to 'Active', root_url(:active=>1), method: :get,
+    :class=>"active-link btn btn-light" %>
+    <%= link_to 'Inactive', root_url(:active=>0), method: :get,
+    :class=>"active-link btn btn-light" %>
+  </div>
+  <div class="listing-todos">
+    <table class="cards-table">
+      <tbody id="myTable">
+
+        <%= render 'display'%>
+
+      </tbody>
+
+    </table>
+  </div>
+  <br>
+  <script>
+    $(document).ready(function () {
+      $("#myInput").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function () {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+  </script>

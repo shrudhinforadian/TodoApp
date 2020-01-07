@@ -1,0 +1,91 @@
+<% @todos.each do |todo| %>
+  <tr>
+    <div class="todo-details">
+      <td class="todo-details">
+        <div class="todo-body"><%= todo.body %></div>
+        <div class="todo-date small">
+          <%=todo.created_at.strftime("%I.%M %P, %d %B %Y")%>
+        </div>
+      </td>
+    </div>
+    <div class="btn-group todo-options">
+
+      <%if @todos.first==@todos.last%>
+        <td class="todo-options">
+          <div class="arrow-up" style="visibility:hidden;"><%= link_to "⌃",
+             up_todo_path(todo),action: :active,method: :post,
+              :class=>"card-link text-secondary-grey"%></div>
+        </td>
+        <td class="todo-options">
+          <div class="arrow-down" style="visibility:hidden;">
+            <%= link_to "⌄", down_todo_path(todo),action: :active,method: :post,
+             :class=>"card-link text-secondary-grey"%>
+           </div>
+        </td>
+
+        <%elsif @todos.first==todo%>
+          <td class="todo-options">
+            <div class="arrow-up" style="visibility:hidden;">
+              <%= link_to "⌃", up_todo_path(todo),action: :active,method: :post,
+               :class=>"card-link text-secondary-grey"%>
+             </div>
+          </td>
+          <td class="todo-options">
+            <div class="arrow-down">
+              <%= link_to "⌄", down_todo_path(todo),action: :active,
+              method: :post, :class=>"card-link text-secondary-grey"%>
+            </div>
+          </td>
+          <%elsif @todos.last==todo%>
+            <td class="todo-options">
+              <div class="arrow-up"><%= link_to "⌃",
+                 up_todo_path(todo),action: :active,method: :post,
+                  :class=>"card-link text-secondary-grey"%>
+                </div>
+            </td>
+            <td class="todo-options">
+              <div class="arrow-down" style="visibility:hidden;">
+                <%= link_to "⌄", down_todo_path(todo),action: :active,
+                method: :post, :class=>"card-link text-secondary-grey"%>
+              </div>
+            </td>
+          <%else%>
+            <td class="todo-options">
+              <div class="arrow-up">
+                <%= link_to "⌃", up_todo_path(todo),
+                action: :active,method: :post,
+                :class=>"card-link text-secondary-grey"%>
+              </div>
+            </td>
+            <td class="todo-options">
+              <div class="arrow-down">
+                <%= link_to "⌄", down_todo_path(todo),action: :active,
+                method: :post, :class=>"card-link text-secondary-grey"%>
+                </div>
+            </td>
+          <% end%>
+          <td class="todo-options">
+            <div class="todo-delete">
+              <%= link_to "×", todo_path(todo,:value=>todo.active),
+               method: :delete, data: { confirm: 'Are you sure?' } ,
+               :class=>"card-link text-secondary-grey"%>
+             </div>
+          </td>
+          <td class="todo-options">
+            <div class="todo-activate">
+              <% if todo.active==true%>
+                <%= link_to "✓", active_todo_path(todo),action: :active,
+                method: :post,
+                class:" btn btn-circle text-lighter btn-sm text-center" %>
+              <% else %>
+                <%= link_to "✓", active_todo_path(todo),action: :active,
+                method: :post,
+                class:" btn btn-circle-inactive text-lighter btn-sm text-center" %>
+              <% end %>
+            </div>
+          </td>
+
+        </div>
+
+      </tr>
+    <% end %>

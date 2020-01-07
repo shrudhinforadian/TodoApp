@@ -1,0 +1,7 @@
+Hi
+<%= @user.email %>
+
+Thanks for registering to the TodoApp! To confirm your registration click the URL below.
+
+<%= link_to "confirm",
+ confirm_email_user_url(@user.confirm_token, host: "http://lvh.me:3000")%>
