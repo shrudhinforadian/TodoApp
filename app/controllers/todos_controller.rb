@@ -3,7 +3,7 @@ class TodosController < ApplicationController
   before_action :find_todo_by_user, only: [:update, :destroy,:show,:active,:up,:down]
   #fetching all todos of current user
   def index
-    
+
     @active=true
     @active= !params[:active].nil? ? params[:active]  : @current_user.todos.
     order(updated_at: :desc).first.active unless @current_user.todos.last.nil?
@@ -47,8 +47,7 @@ class TodosController < ApplicationController
   def active
 
       @todo.update(active: !@todo.active)
-      redirect_to todos_path,
-      flash: { success: 'Todo Successfully Actived #{@todo.active}' }
+      redirect_to todos_path
   end
 #changing priority to down
   def down

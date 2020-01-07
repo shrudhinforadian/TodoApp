@@ -21,9 +21,9 @@
   <%= render 'new'%>
   <div class="btn-group" role="group" aria-label="Basic example">
     <%= link_to 'Active', root_url(:active=>1), method: :get,
-    :class=>"active-link btn btn-light" %>
+    :class=>"active-link btn Active" %>
     <%= link_to 'Inactive', root_url(:active=>0), method: :get,
-    :class=>"active-link btn btn-light" %>
+    :class=>"active-link btn Inactive " %>
   </div>
   <div class="listing-todos">
     <table class="cards-table">
@@ -36,6 +36,7 @@
     </table>
   </div>
   <br>
+  <div id="active-status" style="display:none;"><%= @todos.first.active %></div>
   <script>
     $(document).ready(function () {
       $("#myInput").on("keyup", function () {
@@ -44,5 +45,20 @@
           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
       });
+
+      var active=$("#active-status").text();
+
+      if (String(active) =='true'){
+        console.log(String(active));
+        $(".Active").addClass("active-link-visited");
+        $(".Inactive").removeClass("active-link-visited");
+      }
+      else{
+        $(".Inactive").addClass("active-link-visited");
+        $(".Active").removeClass("active-link-visited");
+      }
+
+
+
     });
   </script>

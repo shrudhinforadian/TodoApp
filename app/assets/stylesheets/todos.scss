@@ -172,9 +172,20 @@
   color: #868b91;
   padding: 5px 15px;
   font-size: 12px;
-  color: grey;
-}
+  background-color: white;
+  border:1px solid #d4d4d4;
 
+}
+.active-link-visited{
+  background-color: #e8e8e8;
+  padding: 5px 15px;
+  font-size: 12px;
+  // background-color: white; 
+  border:1px solid #d4d4d4;
+}
+.active-link:hover{
+  background-color: #e8e8e8;
+}
 .user-name {
   color: #868b91;
   font-size: 14px;
