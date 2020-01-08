@@ -2,14 +2,28 @@
 
   <div class="form-horizontal">
     <%= form_with(model: [ @current_user, @current_user.todos.build ],
-     local: true) do |form| %>
+    remote: true) do |form| %>
 
-      <p >
-        <%= form.text_field :body ,:class=>"input-todo form-control",
-        :placeholder=>"Enter todo" ,:id=>"focusedInput"%>
-      </p>
+    <p >
+      <%= form.text_field :body ,:class=>"input-todo form-control",
+      :placeholder=>"Enter todo" ,:id=>"enter-todo",remote: true,
+      :id=>"focusedInput",minlength: 8%>
+    </p>
 
-    </div>
-  <% end %>
+  </div>
+<% end %>
 
 </div>
+<div>
+<script>
+  $(document).ready(function () {
+    console.log($(".input-todo").val());
+    $(".input-todo").on("keyup", function (e) {
+      if($(this).val().length >7){
+      if (e.which == 13) {
+        $(this).val(" ");
+      }
+    }
+    });
+  });
+</script>

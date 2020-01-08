@@ -2,7 +2,9 @@
 
 class SessionsController < ApplicationController
   skip_before_action :authorize
-
+  def index
+    redirect_to login_url
+   end
   def new; end
   #creating new user object
   def create
@@ -26,8 +28,8 @@ class SessionsController < ApplicationController
   end
   #log outing the current_user
   def destroy
-    
+
     session[:user_id] = nil
-    redirect_to root_url, flash: { info: 'Logged Out' }
+    redirect_to 'login', flash: { info: 'Logged Out' }
   end
 end

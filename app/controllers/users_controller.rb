@@ -3,6 +3,9 @@
 class UsersController < ApplicationController
   skip_before_action :authorize
   # creating new user
+  def index
+    redirect_to login_url
+  end
   def create
 
     @user = User.new(user_params)
@@ -44,7 +47,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    
+
     params.require(:user).permit(:name,:email, :password, :password_confirmation)
   end
 end

@@ -18,25 +18,27 @@
     </div>
   </div>
   <br>
-  <%= render 'new'%>
+  <div><%= render 'new' %></div>
   <div class="btn-group" role="group" aria-label="Basic example">
-    <%= link_to 'Active', root_url(:active=>1), method: :get,
-    :class=>"active-link btn Active" %>
-    <%= link_to 'Inactive', root_url(:active=>0), method: :get,
-    :class=>"active-link btn Inactive " %>
+    <%= link_to 'Active', root_url(:active=>1),remote: true,
+    :class=>"active-link btn Active"  %>
+    <%= link_to 'Inactive', root_url(:active=>0),remote: true,
+    :class=>"active-link btn Inactive "  %>
   </div>
   <div class="listing-todos">
     <table class="cards-table">
       <tbody id="myTable">
-
-        <%= render 'display'%>
+        <%= render @todos%>
 
       </tbody>
 
     </table>
   </div>
   <br>
-  <div id="active-status" style="display:none;"><%= @todos.first.active %></div>
+  <div id="active-status" style="display:none;"><%=@todos.
+    first.nil? ? 'true' : @todos.first.active %></div>
+    <div id="task-form" style="display:none;"></div>
+
   <script>
     $(document).ready(function () {
       $("#myInput").on("keyup", function () {
@@ -47,9 +49,8 @@
       });
 
       var active=$("#active-status").text();
-
+      console.log(active)
       if (String(active) =='true'){
-        console.log(String(active));
         $(".Active").addClass("active-link-visited");
         $(".Inactive").removeClass("active-link-visited");
       }
@@ -58,7 +59,6 @@
         $(".Active").removeClass("active-link-visited");
       }
 
-
-
+    
     });
   </script>

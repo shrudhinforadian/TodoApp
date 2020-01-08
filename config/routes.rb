@@ -26,5 +26,6 @@ Rails.application.routes.draw do
   get '/signup' => 'users#new'
   post '/users' => 'users#create'
   root 'todos#index'
+  resources :entries, defaults: { format: 'json' }
   # get "/active/:id", to: "controller#active", as: :active
 end

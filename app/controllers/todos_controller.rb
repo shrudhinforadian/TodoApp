@@ -1,111 +1,107 @@
+# frozen_string_literal: true
+
 class TodosController < ApplicationController
 
-  before_action :find_todo_by_user, only: [:update, :destroy,:show,:active,:up,:down]
-  #fetching all todos of current user
+  before_action :find_todo_by_user, only: %i[destroy show active up down]
+  before_action :current_active, only: %i[active down up destroy]
+  before_action :list_todos, only: %i[create active down up destroy]
+  respond_to :html, :js
+  # fetching all todos of current user
   def index
-
-    @active=true
-    @active= !params[:active].nil? ? params[:active]  : @current_user.todos.
-    order(updated_at: :desc).first.active unless @current_user.todos.last.nil?
+    @active = params[:active].nil? ? true : params[:active]
+    @active = first_todo.nil? ? true : first_todo.active if params[:active].nil?
     list_todos
+    page_rendering
   end
-  #displaying selected todo
+
+  # displaying selected todo
   def show
-
+    page_rendering
   end
-  #creating new todo object
-  def new
 
+  # creating new todo object
+  def new
     @todo = @current_user.todos.build
   end
-  def edit
-      redirect_to todos_path
-  end
-  #creating new todo with params
+
+  # creating new todo with params
   def create
-
     @todo = @current_user.todos.build(todo_params)
+    list_todos
     if @todo.save
-
-      redirect_to todos_path, flash: { success: 'Todo Successfully Inserted' }
-
+      page_rendering
     else
-      redirect_to root_url, flash: {warning: 'Todo Insertion Failed!'}
-    end
-  end
-
-  def update
-
-    if @todo.update(todo_params)
-      redirect_to todo_path, flash: { success: 'Todo Successfully Updated' }
-    else
-      flash.now[:warning] = 'Todo Updation Failed'
-      render 'edit'
+      page_rendering
     end
   end
 
   def active
-
-      @todo.update(active: !@todo.active)
-      redirect_to todos_path
+    @active = @todo.active
+    list_todos
+    @todo.update(active: !@todo.active)
+    page_rendering
   end
-#changing priority to down
+
+  # changing priority to down
   def down
-
-    @active=@todo.active
-    list_todos
-    @index=@todos.pluck(:id).index(@todo.id)+1
+    @index = @todos.pluck(:id).index(@todo.id) + 1
     change_priority
-    redirect_to todos_path
+    page_rendering
   end
-  #changing priority to up
+
+  # changing priority to up
   def up
-
-    @active=@todo.active
-    list_todos
-    @index=@todos.pluck(:id).index(@todo.id)-1
+    @index = @todos.pluck(:id).index(@todo.id) - 1
     change_priority
-    redirect_to todos_path
+    page_rendering
   end
-    #deleting selected todo
+
+  # deleting selected todo
   def destroy
-
-    active=@todo.active
-    @todo.destroy
     if @todo.destroy
-
-      redirect_to todos_path(:active => active),
-       flash: { success: 'Todo Successfully Deleted' }
+      page_rendering
     else
-
-      flash.now[:success] = 'Todo Deletion Failed'
-      render 'show'
+      page_rendering
     end
   end
 
   private
-  #finding the todo which is in the current users ownership
-  def find_todo_by_user
 
+  # finding the todo which is in the current users ownership
+  def find_todo_by_user
     @todo = @current_user.todos.find(params[:id])
   end
-  #finding all todo
-  def list_todos
 
+  # finding all todo
+  def list_todos
+    @active = @active.nil? ? true : @active
     @todos = @current_user.todos.where(active: @active)
     @todos = @todos.order(priority: :desc)
   end
-
+  #priority switching
   def change_priority
-
-    @up=@todos.limit(1).offset(@index)
-    @up= @up[0]
-    priority=@todo.priority
+    @up = @todos.limit(1).offset(@index)
+    @up = @up[0]
+    priority = @todo.priority
     @todo.update(priority: @up.priority)
     @up.update(priority: priority)
   end
+  #latest updated todo
+  def first_todo
+    @current_user.todos.order(updated_at: :desc).first
+  end
 
   def todo_params
-    params.require(:todo).permit( :body, :user_id)
+    params.require(:todo).permit(:body, :user_id)
   end
+end
+def  page_rendering
+  respond_to do |format|
+    format.html { render action: :index }
+    format.json { head :no_content }
+    format.js { render layout: false }
+  end
+end
+def current_active
+  @active=@todo.active
 end
