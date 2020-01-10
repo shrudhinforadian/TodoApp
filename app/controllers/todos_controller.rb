@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class TodosController < ApplicationController
-
-  before_action :find_todo_by_user, only: %i[destroy show active up down]
-  before_action :current_active, only: %i[active down up destroy]
-  before_action :list_todos, only: %i[create active down up destroy]
+  before_action :find_todo_by_user, only: %i[destroy show activate up down]
+  before_action :current_active, only: %i[activate down up destroy]
+  before_action :list_todos, only: %i[create activate down up destroy]
   respond_to :html, :js
+
   # fetching all todos of current user
   def index
     @active = params[:active].nil? ? true : params[:active]
@@ -14,14 +14,13 @@ class TodosController < ApplicationController
     page_rendering
   end
 
-  # displaying selected todo
-  def show
-    page_rendering
-  end
-
   # creating new todo object
   def new
     @todo = @current_user.todos.build
+  end
+
+  def active
+
   end
 
   # creating new todo with params
@@ -35,30 +34,29 @@ class TodosController < ApplicationController
     end
   end
 
-  def active
-    @active = @todo.active
-    list_todos
+  def activate
     @todo.update(active: !@todo.active)
     page_rendering
   end
 
   # changing priority to down
   def down
-    @index = @todos.pluck(:id).index(@todo.id) + 1
-    change_priority
+    @up = @todos.where("priority<?",@todo.priority).first
+    priority_switch
     page_rendering
   end
 
   # changing priority to up
   def up
-    @index = @todos.pluck(:id).index(@todo.id) - 1
-    change_priority
+    @up = @todos.where("priority>?",@todo.priority).last
+    priority_switch
     page_rendering
   end
 
   # deleting selected todo
   def destroy
     if @todo.destroy
+
       page_rendering
     else
       page_rendering
@@ -75,18 +73,11 @@ class TodosController < ApplicationController
   # finding all todo
   def list_todos
     @active = @active.nil? ? true : @active
-    @todos = @current_user.todos.where(active: @active)
-    @todos = @todos.order(priority: :desc)
+    @todos = @current_user.todos.where(active: @active).order(priority: :desc)
+    @todos=@todos.paginate(:page => params[:page], :per_page => 4 )
   end
-  #priority switching
-  def change_priority
-    @up = @todos.limit(1).offset(@index)
-    @up = @up[0]
-    priority = @todo.priority
-    @todo.update(priority: @up.priority)
-    @up.update(priority: priority)
-  end
-  #latest updated todo
+
+  # latest updated todo
   def first_todo
     @current_user.todos.order(updated_at: :desc).first
   end
@@ -94,14 +85,22 @@ class TodosController < ApplicationController
   def todo_params
     params.require(:todo).permit(:body, :user_id)
   end
-end
-def  page_rendering
-  respond_to do |format|
-    format.html { render action: :index }
-    format.json { head :no_content }
-    format.js { render layout: false }
+
+  def  page_rendering
+    respond_to do |format|
+      format.html { render action: :index }
+      format.json { head :no_content }
+      format.js { render layout: false , :locals => {:active => params[:active]}  }
+    end
   end
-end
-def current_active
-  @active=@todo.active
+
+  def current_active
+    @active = @todo.active
+  end
+
+  def priority_switch
+    priority_temp=@todo.priority
+    @todo.change_priority(@up.priority)
+    @up.change_priority(priority_temp)
+  end
 end

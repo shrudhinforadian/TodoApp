@@ -1,1 +1,26 @@
-$('#myTable').html("<%= j (render  @todos) %>");
+var upbody= '<%= @todo.id%>';
+var downbody= '<%= @up.id%>';
+$('#myTable tr ').each(function() {
+
+   var upid=Number($(" .todo-id",this ).text());
+   var uptr=$(this).closest('tr').html();
+   var downtr=$(this).next('tr').html();
+   if (upid==upbody ){
+     $(this).closest('tr').html(downtr);
+     $(this).next('tr').html(uptr);
+     upbody=0;
+  }
+
+});
+$('#myTable tr ').each(function() {
+  $('.up-link',this).show();
+  $('.down-link',this).show();
+   if($("#myTable tr:first-child").text()==$(this).text())
+   {
+     $('.up-link',this).hide();
+   }
+   if($("#myTable tr:last-child").text()==$(this).text())
+   {
+     $('.down-link',this).hide();
+   }
+});

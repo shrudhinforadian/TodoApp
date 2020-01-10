@@ -1,6 +1,6 @@
-<div class="container" >
+<div class="container">
   <div class="section-image">
-  <%= image_tag "check.png" %>
+    <%= image_tag "check.png" %>
   </div>
   <div class="header-section">
     <div class=" input-search">
@@ -18,47 +18,58 @@
     </div>
   </div>
   <br>
-  <div><%= render 'new' %></div>
+  <div><%= render 'form' %></div>
   <div class="btn-group" role="group" aria-label="Basic example">
-    <%= link_to 'Active', root_url(:active=>1),remote: true,
-    :class=>"active-link btn Active"  %>
-    <%= link_to 'Inactive', root_url(:active=>0),remote: true,
-    :class=>"active-link btn Inactive "  %>
+    <%= link_to 'Active', root_url(:active=> 1), :class=>"active-link btn Active",:val=>1 %>
+    <%= link_to 'Inactive', root_url(:active=>0), :class=>"active-link btn Inactive ",:id=>0 %>
   </div>
+
   <div class="listing-todos">
     <table class="cards-table">
       <tbody id="myTable">
-        <%= render @todos%>
 
+          <%= render @todos %>
+
+        <div id="infinite-scrolling" >
+          <%= will_paginate @todos%>
+        </div>
       </tbody>
-
     </table>
   </div>
   <br>
-  <div id="active-status" style="display:none;"><%=@todos.
-    first.nil? ? 'true' : @todos.first.active %></div>
-    <div id="task-form" style="display:none;"></div>
-
+  <div class="active-status"><%=@active%></div>
   <script>
     $(document).ready(function () {
+
       $("#myInput").on("keyup", function () {
         var value = $(this).val().toLowerCase();
         $("#myTable tr").filter(function () {
           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
       });
-
-      var active=$("#active-status").text();
-      console.log(active)
-      if (String(active) =='true'){
-        $(".Active").addClass("active-link-visited");
-        $(".Inactive").removeClass("active-link-visited");
-      }
-      else{
+      $(".active-status").hide();
+      var active = $(".active-status").text();
+      if (active == 'true') {
+        $(".btn").removeClass("active-link-visited");
         $(".Inactive").addClass("active-link-visited");
-        $(".Active").removeClass("active-link-visited");
+      } else {
+        $(".btn").removeClass("active-link-visited");
+        $(".Active").addClass("active-link-visited");
       }
 
-    
+    });
+
+    $('#myTable tr ').each(function () {
+      $('.up-link', this).show();
+      $('.down-link', this).show();
+      if ($("#myTable tr:first-child").text() == $(this).text()) {
+        $('.up-link', this).hide();
+      }
+      if ($("#myTable tr:last-child").text() == $(this).text()) {
+        $('.down-link', this).hide();
+      }
+
+
+
     });
   </script>

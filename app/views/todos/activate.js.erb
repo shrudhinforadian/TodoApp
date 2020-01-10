@@ -1,11 +1,9 @@
-$('#myTable tr td .todo-id').each(function() {
-   var body=$(this ).text();
-   var comp= '<%= @todo.id%>';
-   if (Number(body) == Number(comp)){
-     console.log("inside");
+$('#myTable tr td .todo-id ').each(function() {
+   var body=Number($(this ).text());
+   var comp= Number('<%= @todo.id%>');
+   if (body==comp){
     $(this ).parents("tr").hide();
   }
-  // console.log($(this '#todo-body').text);
 });
 $('#myTable tr ').each(function() {
   $('.up-link',this).show();

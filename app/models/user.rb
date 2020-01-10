@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ActiveRecord::Base
   before_create :confirmation_token
 
@@ -13,13 +15,13 @@ class User < ActiveRecord::Base
     self.email_confirmed = true
     self.confirm_token = nil
     save!(validate: false)
-end
+  end
 
   private
 
   def confirmation_token
-    if confirm_token.blank?
-      self.confirm_token = SecureRandom.urlsafe_base64.to_s
-    end
-      end
+    return unless confirm_token.blank?
+
+    self.confirm_token = SecureRandom.urlsafe_base64.to_s
+  end
 end

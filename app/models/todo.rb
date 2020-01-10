@@ -6,8 +6,11 @@ class Todo < ApplicationRecord
   validates :user_id, presence: true
   validates :body, presence: true,
                    length: { minimum: 8 }
-
-
+  self.per_page = 5
+  def change_priority(priority)
+    self.priority = priority
+    save!(validate: false)
+  end
 
   private
 

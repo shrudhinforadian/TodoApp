@@ -7,10 +7,12 @@ Rails.application.routes.draw do
   resources :todos
   resources :users do
     resources :todos
+    get:active
   end
   resources :todos do
+
     member do
-      post :active
+      post :activate
       post :up
       post :down
     end
