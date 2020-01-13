@@ -1,0 +1,235 @@
+// Place all the styles related to the todos controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.btn-circle.btn-sm {
+  width: 30px;
+  height: 30px;
+  padding: 4px 0;
+  border-radius: 100px;
+  font-size: 25px;
+  line-height: 0.85;
+  background-color: #18bd9a;
+  border-color: #18bd9a;
+}
+
+.btn-circle.btn-sm:hover {
+  background-color: #cccccc;
+  border-color: #cfcbcb;
+}
+
+.text-lighter {
+  color: white;
+}
+
+.text-lighter:hover {
+  color: white;
+}
+
+.open-box {
+  display: none;
+}
+
+.btn-circle-inactive.btn-sm {
+  width: 30px;
+  height: 30px;
+  padding: 4px 0;
+  border-radius: 100px;
+  font-size: 25px;
+  line-height: 0.85;
+  background-color: #cccccc;
+  border-color: #cfcbcb;
+}
+
+.btn-circle-inactive.btn-sm:hover {
+  background-color: #18bd9a;
+  border-color: #4bf8d1;
+}
+
+.input-todo {
+  height: 40px;
+}
+
+.input-todo:focus {
+  border-color: #18bd9c;
+  box-shadow: inset 0 0 0 #18bd9c, 0 0 10px #18bd9c;
+}
+
+.btn-light {
+  border-color: #e7e7e7;
+}
+
+.input-search {
+  float: left;
+  font-size: 11px;
+  text-align: left;
+
+  input {
+    width: 125px;
+    background-color: #e8e8e8;
+    height: 25px;
+    border-radius: 2px;
+    float: left;
+  }
+}
+
+.current-user {
+  float: right;
+  margin-top: 0;
+}
+
+.header-section {
+  max-width: 800px;
+  padding-bottom: 50px;
+}
+
+.cards-table {
+  width: 100%;
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    margin: auto;
+    overflow: hidden;
+    display: block;
+    margin-bottom: 1.5rem;
+    padding: 2rem;
+    background-color: white;
+    // box-shadow: 0 0 1rem transparentize( black, 0.9 );
+    border: 1px solid #cccccc;
+  }
+
+  td {
+    margin: auto;
+  }
+  // td {
+  //   display: inline-block;
+  //   margin: 0 0.5rem 0.5rem 0;
+  //   padding: 0.5rem;
+  //   text-align: left;
+  //   background-color: white;
+  //
+  //   &:before {
+  //     float: left;
+  //     margin: -0.5rem 0.5rem -0.5rem -0.5rem;
+  //     padding: 0.625rem 0.5rem;
+  //     font-size: 0.75em;
+  //     font-weight: bold;
+  //     background: transparentize(#58C25F, 0.9);
+  //     color: #58C25F;
+  //   }
+  // }
+}
+
+.todo-details {
+  float: left;
+  width: 60%;
+}
+
+.todo-options {
+  // float: left;
+  // margin: auto;
+  width: 10%;
+  text-align: right;
+  font-size: 30px;
+  color: #cccccc;
+  // vertical-align: super;
+  div {
+    width: 100%;
+    padding-left: 20px;
+    overflow: hidden;
+    // margin: auto;
+    // padding-top: 15px;
+  }
+}
+
+.text-secondary-grey {
+  color: #cccccc;
+}
+
+.text-secondary-grey:hover {
+  color: #18bd9a;
+}
+
+.todo-date {
+  font-size: 11px;
+  margin-top: 10px;
+  color: #cccccc;
+}
+
+.todo-body {
+  color: #868b91;
+}
+
+.todo-body:hover {
+  color: #494e52;
+  text-decoration: underline;
+}
+
+.active-link {
+  color: #868b91;
+  padding: 5px 15px;
+  font-size: 12px;
+  background-color: white;
+  border:1px solid #d4d4d4;
+
+}
+.active-link-visited{
+  background-color: #e8e8e8;
+  padding: 5px 15px;
+  font-size: 12px;
+  // background-color: white;
+  border:1px solid #d4d4d4;
+}
+.active-link:hover{
+  background-color: #e8e8e8;
+}
+.user-name {
+  color: #868b91;
+  font-size: 14px;
+  padding-right: 50px;
+  padding-top: 8px;
+  float: left;
+}
+
+.logout-link {
+  a {
+    color: #868b91;
+  }
+  font-size: 14px;
+  float: right;
+  padding-top: 8px;
+}
+
+.section-image {
+  margin-top: 50px;
+  margin-bottom: 30px;
+  text-align: center;
+
+  img {
+    width: 20%;
+    overflow: hidden;
+  }
+  /* width: 50%; */
+}
+
+.arrow-up {
+  margin-bottom: -25px;
+}
+
+.arrow-down {
+  margin-bottom: 5px;
+}
+
+.todo-delete {
+  margin-bottom: -5px;
+}
+
+.todo-activate {
+  margin-bottom: 0;
+}
+.paginate-page-links{
+  // display: none;
+}

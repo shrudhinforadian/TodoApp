@@ -1,0 +1,19 @@
+$('#myTable tr td .todo-id ').each(function() {
+   var body=Number($(this ).text());
+   var comp= Number('<%= @todo.id%>');
+   if (body==comp){
+    $(this ).parents("tr").hide();
+  }
+});
+$('#myTable tr ').each(function() {
+  $('.up-link',this).show();
+  $('.down-link',this).show();
+   if($("#myTable tr:first-child").text()==$(this).text())
+   {
+     $('.up-link',this).css('visibility','hidden');
+   }
+   if($("#myTable tr:last-child").text()==$(this).text())
+   {
+     $('.down-link',this).css('visibility','hidden');
+   }
+});

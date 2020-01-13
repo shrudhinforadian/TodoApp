@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-5 mx-auto">
+      <div id="first" class="text-center">
+        <% if current_user%>
+          <div class="alert alert-warning">Do you want to logout?</div>
+          <%= current_user.email %>.
+          <%= link_to "Log Out", logout_path %>
+
+        <% else %>
+          <div class="myform form ">
+            <div class="logo mb-3">
+              <div class="col-md-12 text-center">
+                <h1>Login</h1>
+              </div>
+            </div>
+            <%= form_tag sessions_path do %>
+            <div class="form-group">
+
+              <%= label_tag :email %><br/>
+              <%= text_field_tag :email, params[:email] ,:class => "form-control" ,:placeholder => "Enter your Email"%>
+            </div>
+            <div class="form-group">
+              <%= label_tag :password %><br/>
+              <%= password_field_tag :password ,params[:password], :class=>"form-control",:placeholder=>"Enter your Password"%>
+            </div>
+            <div class="col-md-12 text-center ">
+              <%= submit_tag "Log In" ,:class=>" btn btn-block mybtn btn-primary tx-tfm"%>
+            </div>
+            <div class="col-md-12 ">
+
+              <div class="form-group">
+                <p class="text-center">Don't have account?<br>
+                  <%= link_to "Sign Up", signup_path %></p>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<% end %>
+<% end %>

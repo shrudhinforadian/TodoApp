@@ -1,0 +1,115 @@
+<div class="container">
+  <div class="section-image">
+    <%= image_tag "check.png" %>
+  </div>
+  <div class="header-section">
+    <!-- <div class="search-input"> <div> -->
+    <div class=" input-search">
+      <!-- <input class="form-control" id="myInput" type="text" placeholder="Search"  > -->
+      <%= form_tag(todos_path,method: :get,class: "seach-todo",action: "index" ,remote:true )  do%>
+
+      <%= search_field_tag :search, params[:search],:class=>" form-control",:placeholder=>"Search" ,:id=>"myInput",:remote=> true  %>
+
+      <%end%>
+    </div>
+    <div class="current-user">
+      <%if   @current_user %>
+        <div class="user-name">
+          <%= @current_user.name %>
+        </div>
+        <div class="logout-link">
+          <%= link_to 'Logout', logout_path ,:class=>" card-link "%>
+        </div>
+      <%end%>
+    </div>
+  </div>
+  <br>
+  <div><%= render 'form' %></div>
+  <div class="btn-group" role="group" aria-label="Basic example">
+    <%= link_to 'Active', root_url(:active=> 1), :class=>"active-link btn Active",:val=>1 %>
+    <%= link_to 'Inactive', root_url(:active=>0), :class=>"active-link btn Inactive ",:id=>0 %>
+  </div>
+
+  <div class="listing-todos">
+    <table class="cards-table">
+      <div id="infinite-scrolling"  style="display:none;">
+        <%= will_paginate %>
+      </div>
+      <tbody id="myTable">
+
+          <%= render @todos %>
+
+
+      </tbody>
+    </table>
+  </div>
+  <br>
+  <div class="active-status"><%=@active%></div>
+  <script>
+    $(".active-status").hide();
+    $(document).ready(function () {
+        var value = $(this).val().toLowerCase();
+      $("#myInput").val('').val('<%=@temp%>').focus();
+      $("#myInput").on("keyup", function (e) {
+        if (e.which == 13 || e.which == 37 || e.which == 38 || e.which == 39 || e.which == 40) {
+
+        }
+        else{
+        var value = $(this).val().toLowerCase();
+        var active = $(".active-status").text();
+        $('.seach-todo').submit( function(e) {
+        // e.preventDefault();
+        $("#myInput").focus().val(value);
+        //this here
+       });
+        // $(".search-input").append(value);
+                  $.ajax({
+                  url: 'http://localhost:3000/todos',
+                  data: {search: value,active: active},
+                  dataType: "html",
+                  async: 'false',
+                  cache: 'false',
+                   type: "get",
+                  success: function(result) {
+                        // $("#myTable").delay("slow").fadeIn();
+                        $('.seach-todo').submit();
+
+                       }
+                    });
+
+
+
+        }
+      });
+        // $("#myTable tr").filter(function () {
+        //   $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        // });
+
+      $(".active-status").hide();
+      var active = $(".active-status").text();
+      // console.log(active);
+      if (active == 1) {
+        $(".btn").removeClass("active-link-visited");
+        $(".Inactive").addClass("active-link-visited");
+      } else {
+        $(".btn").removeClass("active-link-visited");
+        $(".Active").addClass("active-link-visited");
+      }
+
+
+
+    $('#myTable tr ').each(function () {
+      $('.up-link', this).show();
+      $('.down-link', this).show();
+      if ($("#myTable tr:first-child").text() == $(this).text()) {
+        $('.up-link', this).css('visibility','hidden');
+      }
+      if ($("#myTable tr:last-child").text() == $(this).text()) {
+        $('.down-link', this).css('visibility','hidden');
+      }
+
+
+
+    });
+    });
+  </script>
