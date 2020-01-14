@@ -73,10 +73,8 @@ class TodosController < ApplicationController
   # finding all todo
   def list_todos
     @active = @active.nil? ? true : @active
-    @temp=@search
-    @search="%#{@search}%"
     @todos = @current_user.todos.where(active: @active).order(priority: :desc)
-    @todos = @todos.where("body like ?" ,@search)
+    @todos = @todos.where("body like ?" ,"%#{@search}%")
     @todos=@todos.paginate(:page => params[:page], :per_page => 5 )
   end
 

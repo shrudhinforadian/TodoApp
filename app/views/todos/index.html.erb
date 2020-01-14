@@ -49,7 +49,7 @@
     $(".active-status").hide();
     $(document).ready(function () {
         var value = $(this).val().toLowerCase();
-      $("#myInput").val('').val('<%=@temp%>').focus();
+      $("#myInput").val('').val('<%=@search%>').focus();
       $("#myInput").on("keyup", function (e) {
         if (e.which < 35 || e.which > 90 ) {
 
@@ -58,11 +58,8 @@
         var value = $(this).val().toLowerCase();
         var active = $(".active-status").text();
         $('.seach-todo').submit( function(e) {
-        // e.preventDefault();
         $("#myInput").focus().val(value);
-        //this here
        });
-        // $(".search-input").append(value);
                   $.ajax({
                   url: 'http://localhost:3000/todos',
                   data: {search: value,active: active},
@@ -71,7 +68,6 @@
                   cache: 'false',
                    type: "get",
                   success: function(result) {
-                        // $("#myTable").delay("slow").fadeIn();
                         $('.seach-todo').submit();
 
                        }
