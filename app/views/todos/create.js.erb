@@ -8,8 +8,8 @@ else {
           $('<div class="page-delimiter" data-page="<%= params[:page] %>"></div>');
   $('#myTable').append(delimiter);
   // delay(3000);
-  $('#myTable').html('<%= j render @todos %>');
-  // $('.pagination').replaceWith('<%= j will_paginate @todos %>');
+  // $('#myTable').html('<%= j render @todos %>');
+  $('.pagination').replaceWith('<%= j will_paginate @todos %>');
   // preparePagination(delimiter);
   <% unless @todos.next_page %>
   $('#infinite-scrolling .pagination').remove();

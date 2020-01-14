@@ -8,8 +8,6 @@ class TodosController < ApplicationController
 
   # fetching all todos of current user
   def index
-    p "hi"
-    p params
     @search=params[:search].nil? ? ' ' : params[:search]
     @active = params[:active].nil? ? true : params[:active]
     @active = first_todo.nil? ? true : first_todo.active if params[:active].nil?
@@ -59,7 +57,6 @@ class TodosController < ApplicationController
   # deleting selected todo
   def destroy
     if @todo.destroy
-
       page_rendering
     else
       page_rendering
@@ -81,7 +78,6 @@ class TodosController < ApplicationController
     @todos = @current_user.todos.where(active: @active).order(priority: :desc)
     @todos = @todos.where("body like ?" ,@search)
     @todos=@todos.paginate(:page => params[:page], :per_page => 5 )
-    p @todos.first
   end
 
 
