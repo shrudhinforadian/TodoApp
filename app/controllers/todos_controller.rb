@@ -26,7 +26,7 @@ class TodosController < ApplicationController
     if @todo.save
       page_rendering
     else
-      flash.now[:danger] = 'Todo cannot be deleted'
+      flash.now[:danger] = 'Todo cannot be inserted'
     end
   end
 
@@ -54,8 +54,7 @@ class TodosController < ApplicationController
     if @todo.destroy
       page_rendering
     else
-
-      page_rendering
+      flash.now[:danger] = 'Todo cannot be Deleted'
     end
   end
 
