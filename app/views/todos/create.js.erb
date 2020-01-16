@@ -1,29 +1,28 @@
 
-// delay(3000);
 if($(".active-status").text()==1){
-$('#myTable').prepend('<%= j render @todo %>');
+  $('#myTable').prepend('<%= j render @todo %>');
 }
 else {
+    console.log('in-active');
   var delimiter =
           $('<div class="page-delimiter" data-page="<%= params[:page] %>"></div>');
   $('#myTable').append(delimiter);
-  // delay(3000);
-  // $('#myTable').html('<%= j render @todos %>');
+  $('#myTable').html('<%= j render @todos %>');
   $('.pagination').replaceWith('<%= j will_paginate @todos %>');
-  // preparePagination(delimiter);
   <% unless @todos.next_page %>
   $('#infinite-scrolling .pagination').remove();
   <% end %>
 }
-$('#myTable tr ').each(function() {
-  $('.up-link',this).show();
-  $('.down-link',this).show();
-   if($("#myTable tr:first-child").text()==$(this).text())
-   {
-     $('.up-link',this).css('visibility','hidden');
-   }
-   if($("#myTable tr:last-child").text()==$(this).text())
-   {
-     $('.down-link',this).css('visibility','hidden');
-   }
+$('#myTable tr ').each(function (i) {
+  $('.up-link', this).css('visibility','visible');
+  $('.down-link', this).css('visibility','visible');
+  if (i==0) {
+    $('.up-link', this).css('visibility','hidden');
+  }
+  last=i;
 });
+$('#myTable tr ').each(function(i) {
+  if (i==last){
+      $('.down-link',this).css('visibility','hidden');
+    }
+  });

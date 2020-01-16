@@ -1,21 +1,47 @@
-$('#myTable tr td .todo-id').each(function() {
+var last;
+var del;
+var comp= '<%= @todo.id%>';
+$('#myTable tr td .todo-id').each(function(i) {
    var body=$(this ).text();
-   var comp= '<%= @todo.id%>';
    if (Number(body) == Number(comp)){
-     console.log("inside");
-    $(this ).parents("tr").hide();
+     $(this ).parents("tr").hide();
+     del=i;
   }
-  // console.log($(this '#todo-body').text);
+  last=i;
 });
-$('#myTable tr ').each(function() {
-  $('.up-link',this).show();
-  $('.down-link',this).show();
-   if($("#myTable tr:first-child").text()==$(this).text())
-   {
-     $('.up-link',this).css('visibility','hidden');
-   }
-   if($("#myTable tr:last-child").text()==$(this).text())
-   {
-     $('.down-link',this).css('visibility','hidden');
-   }
-});
+if(del==0){
+      $('#myTable tr ').each(function (i) {
+        $('.up-link', this).css('visibility','visible');
+        $('.down-link', this).css('visibility','visible');
+        if (i==1) {
+          $('.up-link', this).css('visibility','hidden');
+        }
+        if (i==last){
+            $('.down-link',this).css('visibility','hidden');
+          }
+      });
+    }
+else if(del==last){
+  $('#myTable tr ').each(function (i) {
+    $('.up-link', this).css('visibility','visible');
+    $('.down-link', this).css('visibility','visible');
+    if (i==0) {
+      $('.up-link', this).css('visibility','hidden');
+    }
+    if (i==last-1){
+        $('.down-link',this).css('visibility','hidden');
+      }
+  });
+}
+else{
+    $('#myTable tr ').each(function (i) {
+      $('.up-link', this).css('visibility','visible');
+      $('.down-link', this).css('visibility','visible');
+      if (i==0) {
+        $('.up-link', this).css('visibility','hidden');
+      }
+      if (i==last){
+          $('.down-link',this).css('visibility','hidden');
+        }
+    });
+}

@@ -42,15 +42,16 @@ class TodosController < ApplicationController
 
   # changing priority to down
   def down
-    @up = @todos.where("priority<?",@todo.priority).first
-    priority_switch
+    symbol="<"
+    @todo.priority_switch(symbol,@todos)
     page_rendering
   end
 
   # changing priority to up
   def up
-    @up = @todos.where("priority>?",@todo.priority).last
-    priority_switch
+    symbol=">"
+    @todo.priority_switch(symbol,@todos)
+    @first=first_todo
     page_rendering
   end
 
@@ -73,15 +74,14 @@ class TodosController < ApplicationController
   # finding all todo
   def list_todos
     @active = @active.nil? ? true : @active
-    @todos = @current_user.todos.where(active: @active).order(priority: :desc)
-    @todos = @todos.where("body like ?" ,"%#{@search}%")
+    @todos = @current_user.todos.priority(@active).search(@search)
     @todos=@todos.paginate(:page => params[:page], :per_page => 5 )
   end
 
 
   # latest updated todo
   def first_todo
-    @current_user.todos.order(updated_at: :desc).first
+    @current_user.todos.updated.first
   end
 
   def todo_params
@@ -98,11 +98,5 @@ class TodosController < ApplicationController
 
   def current_active
     @active = @todo.active
-  end
-
-  def priority_switch
-    priority_temp=@todo.priority
-    @todo.change_priority(@up.priority)
-    @up.change_priority(priority_temp)
   end
 end
