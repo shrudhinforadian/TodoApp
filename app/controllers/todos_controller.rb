@@ -10,7 +10,6 @@ class TodosController < ApplicationController
   def index
     @search=params[:search].nil? ? ' ' : params[:search]
     @active = params[:active].nil? ? true : params[:active]
-    @active = first_todo.nil? ? true : first_todo.active if params[:active].nil?
     list_todos
     page_rendering
   end
@@ -20,10 +19,6 @@ class TodosController < ApplicationController
     @todo = @current_user.todos.build
   end
 
-  def active
-
-  end
-
   # creating new todo with params
   def create
     @todo = @current_user.todos.build(todo_params)
@@ -31,7 +26,7 @@ class TodosController < ApplicationController
     if @todo.save
       page_rendering
     else
-      page_rendering
+      flash.now[:danger] = 'Todo cannot be deleted'
     end
   end
 
@@ -50,8 +45,7 @@ class TodosController < ApplicationController
   # changing priority to up
   def up
     symbol=">"
-    @todo.priority_switch(symbol,@todos)
-    @first=first_todo
+    @up=@todo.priority_switch(symbol,@todos)
     page_rendering
   end
 
@@ -60,6 +54,7 @@ class TodosController < ApplicationController
     if @todo.destroy
       page_rendering
     else
+
       page_rendering
     end
   end
@@ -74,14 +69,8 @@ class TodosController < ApplicationController
   # finding all todo
   def list_todos
     @active = @active.nil? ? true : @active
-    @todos = @current_user.todos.priority(@active).search(@search)
+    @todos = @current_user.todos.sort_by_priority(@active).search(@search)
     @todos=@todos.paginate(:page => params[:page], :per_page => 5 )
-  end
-
-
-  # latest updated todo
-  def first_todo
-    @current_user.todos.updated.first
   end
 
   def todo_params

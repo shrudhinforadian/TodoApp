@@ -8,9 +8,8 @@ class Todo < ApplicationRecord
                    length: { minimum: 8 }
   self.per_page = 5
 
-  scope :priority, ->(active) { where(active: active).order(priority: :desc) }
+  scope :sort_by_priority, ->(active) { where(active: active).order(priority: :desc) }
   scope :search, ->(search) { where('body like ?', "%#{search}%") }
-  scope :updated, -> { order(updated_at: :desc) }
 
   def priority_switch(symbol, todos)
     up = symbol == '>' ? todos.where("priority#{symbol} ?", priority).last
@@ -18,6 +17,7 @@ class Todo < ApplicationRecord
     priority_temp = priority
     change_priority(up.priority)
     up.change_priority(priority_temp)
+    up
   end
 
   def change_priority(priority)
