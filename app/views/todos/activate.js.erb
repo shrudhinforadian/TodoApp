@@ -3,44 +3,21 @@ $('#myTable tr td .todo-id ').each(function(i) {
    var body=Number($(this ).text());
    var comp= Number('<%= @todo.id%>');
    if (body==comp){
-    $(this ).parents("tr").hide();
+    $(this ).parents("tr").remove();
     active_index=i;
   }
   last=i;
 });
-if(active_index==0){
-    $('#myTable tr ').each(function (i) {
-      $('.up-link', this).css('visibility','visible');
-      $('.down-link', this).css('visibility','visible');
-      if (i==1) {
-        $('.up-link', this).css('visibility','hidden');
-      }
-      if (i==last){
-          $('.down-link',this).css('visibility','hidden');
-        }
-    });
-}
-if(active_index==last){
-    $('#myTable tr ').each(function (i) {
-      $('.up-link', this).css('visibility','visible');
-      $('.down-link', this).css('visibility','visible');
-      if (i==0) {
-        $('.up-link', this).css('visibility','hidden');
-      }
-      if (i==last-1){
-          $('.down-link',this).css('visibility','hidden');
-        }
-    });
-}
-else{
-  $('#myTable tr ').each(function (i) {
-    $('.up-link', this).css('visibility','visible');
-    $('.down-link', this).css('visibility','visible');
-    if (i==0) {
-      $('.up-link', this).css('visibility','hidden');
+$('#myTable tr ').each(function (i) {
+  $('.up-link', this).css('visibility','visible');
+  $('.down-link', this).css('visibility','visible');
+  if (i==0) {
+    $('.up-link', this).css('visibility','hidden');
+  }
+  last=i;
+});
+$('#myTable tr ').each(function(i) {
+  if (i==last){
+      $('.down-link',this).css('visibility','hidden');
     }
-    if (i==last){
-        $('.down-link',this).css('visibility','hidden');
-      }
   });
-}
