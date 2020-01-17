@@ -51,8 +51,42 @@
           </div>
 
       </div>
+      <%= render @todo.comments %>
       <%= render 'comments/form' %>
   <div class="active-status"><%=@active%></div>
+    <label for="range">
+          <input type="range" name="range" class="slider" id="myRange" min="0" max="100" step="1" value="<%=@todo.status%>"/>
+          <output for="range" class="output"><%=@todo.status%>%</output>
+    </label>
+    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#myModal">
+   Share
+ </button>
+ <div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Add People to this task</h4>
+        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <%User.all.each do |user| %>
+        <%=user.name%>
+        <%end%>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
   <script>
     var last
     $(".active-status").hide();
@@ -81,15 +115,15 @@
 
                        }
                     });
-
-
-
         }
       });
         // $("#myTable tr").filter(function () {
         //   $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         // });
-
+        $('#myRange').on("input", function() {
+          $(".slider::-webkit-slider-thumb").css('width','100%')
+        $('.output').val(this.value +"%" );
+        }).trigger("change");
       $(".active-status").hide();
       var active = $(".active-status").text();
       // console.log(active);
