@@ -4,6 +4,8 @@ class User < ActiveRecord::Base
   before_create :confirmation_token
   has_secure_password
   has_many :todos, dependent: :destroy
+  has_many :comments, dependent: :destroy
+  has_many :shares, dependent: :destroy
   validates :password_confirmation, presence: true, on: :create
   validates :password, confirmation: true, presence: true,
                        length: { minimum: 8 }, on: :create
@@ -11,7 +13,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email
 
   scope :user, ->(id) { where(id: id) }
-  
+
   def email_activate
     self.email_confirmed = true
     self.confirm_token = nil

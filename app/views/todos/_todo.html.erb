@@ -1,7 +1,7 @@
 <tr>
   <div class="todo-details">
     <td class="todo-details">
-      <div class="todo-body" id="todo-body"><%= todo.body %></div>
+      <div class="todo-body" id="todo-body"><%=link_to todo.body ,todo_path(todo) %></div>
       <div class="todo-date small">
         <%=todo.created_at.strftime("%I.%M %P, %d %B %Y")%>
       </div>

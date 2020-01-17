@@ -8,7 +8,7 @@ class TodosController < ApplicationController
 
   # fetching all todos of current user
   def index
-    @search=params[:search].nil? ? ' ' : params[:search]
+    @search = params[:search].nil? ? ' ' : params[:search]
     @active = params[:active].nil? ? true : params[:active]
     list_todos
     page_rendering
@@ -38,14 +38,14 @@ class TodosController < ApplicationController
 
   # changing priority to down
   def down
-    symbol="<"
+    symbol = "up"
     @todo.priority_switch(symbol,@todos)
     page_rendering
   end
 
   # changing priority to up
   def up
-    symbol=">"
+    symbol = "down"
     @up=@todo.priority_switch(symbol,@todos)
     page_rendering
   end
@@ -59,6 +59,9 @@ class TodosController < ApplicationController
       page_rendering
     end
   end
+  def show
+
+  end
 
   private
 
@@ -70,8 +73,8 @@ class TodosController < ApplicationController
   # finding all todo
   def list_todos
     @active = @active.nil? ? true : @active
-    @todos = @current_user.todos.sort_by_priority(@active).search(@search)
-    @todos=@todos.paginate(:page => params[:page], :per_page => 5 )
+    @todos = @current_user.todos.sort_by_priority.select_by_active(@active).search(@search)
+    @todos = @todos.paginate(:page => params[:page], :per_page => 5 )
   end
 
   def todo_params
