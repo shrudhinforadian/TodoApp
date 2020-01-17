@@ -8,7 +8,7 @@ class TodosController < ApplicationController
 
   # fetching all todos of current user
   def index
-    @search = params[:search].nil? ? ' ' : params[:search]
+    @search = params[:search].nil? ? '' : params[:search]
     @active = params[:active].nil? ? true : params[:active]
     list_todos
     page_rendering
@@ -24,6 +24,7 @@ class TodosController < ApplicationController
     @todo = @current_user.todos.build(todo_params)
     list_todos
     if @todo.save
+      @current_user.todos << @todo
       page_rendering
     else
       flash.now[:danger] = 'Todo cannot be inserted'
@@ -73,7 +74,8 @@ class TodosController < ApplicationController
   # finding all todo
   def list_todos
     @active = @active.nil? ? true : @active
-    @todos = @current_user.todos.sort_by_priority.select_by_active(@active).search(@search)
+    @todos = @current_user.todos
+    .select_by_active(@active).sort_by_priority.search(@search)
     @todos = @todos.paginate(:page => params[:page], :per_page => 5 )
   end
 

@@ -1,0 +1,19 @@
+
+  <div >
+<div class="show_article  mx-auto">
+  <div class="logo mb-3"><br>
+     <div class=" ">
+       <h5>
+         <strong>Commenter:</strong><%= comment.commenter %>
+       </h5>
+
+       <h5>
+         <strong>Comment:</strong><%= comment.body %>
+         <% if @current_user && @current_user.id == @article.user_id  %>
+         <%= button_to 'Delete', [comment.article, comment], method: :delete, data: { confirm: 'Are you sure?' } ,:class=>"btn btn-primary"%>
+       </h5>
+       <% end %>
+     </div>
+  </div>
+</div>
+</div>

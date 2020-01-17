@@ -36,10 +36,8 @@ ActiveRecord::Schema.define(version: 2020_01_17_044120) do
   create_table "todos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.text "body"
     t.boolean "active", default: true
-    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_todos_on_user_id"
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -57,5 +55,4 @@ ActiveRecord::Schema.define(version: 2020_01_17_044120) do
   add_foreign_key "comments", "users"
   add_foreign_key "shares", "todos"
   add_foreign_key "shares", "users"
-  add_foreign_key "todos", "users"
 end

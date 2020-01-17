@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :todos
   resources :users do
     resources :todos
+    resources :shares
     get:active
   end
   get "todos/search"
@@ -23,6 +24,9 @@ Rails.application.routes.draw do
       get :confirm_email
     end
   end
+  resources :todos do
+  resources :comments
+end
   get '/login' => 'sessions#new'
   post '/login' => 'sessions#create'
   get '/logout' => 'sessions#destroy'

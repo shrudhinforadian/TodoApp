@@ -3,9 +3,10 @@
 class User < ActiveRecord::Base
   before_create :confirmation_token
   has_secure_password
-  has_many :todos, dependent: :destroy
+  # has_many :todos, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :shares, dependent: :destroy
+  has_many :todos, -> { distinct }, through: :shares
   validates :password_confirmation, presence: true, on: :create
   validates :password, confirmation: true, presence: true,
                        length: { minimum: 8 }, on: :create
