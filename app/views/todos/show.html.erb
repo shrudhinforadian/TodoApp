@@ -5,63 +5,70 @@
   <div class="header-section">
     <!-- <div class="search-input"> <div> -->
     <div class=" input-search">
-      <!-- <input class="form-control" id="myInput" type="text" placeholder="Search"  > -->
-      <%= form_tag(todos_path,method: :get,class: "seach-todo",action: "index" ,remote:true )  do%>
+      <!-- <input class="form-control" id="myInput" type="text" placeholder="Search" > -->
+      <%= form_tag(todos_path,method: :get,class: "seach-todo",action: "index" ,remote:true ) do%>
 
-      <%= search_field_tag :search, params[:search],:class=>" form-control",:placeholder=>"Search" ,:id=>"myInput",:remote=> true  %>
+      <%= search_field_tag :search, params[:search],:class=>" form-control",:placeholder=>"Search" ,:id=>"myInput",:remote=> true %>
 
-      <%end%>
-    </div>
-    <div class="current-user">
-      <%if   @current_user %>
-        <div class="user-name">
-          <%= @current_user.name %>
-        </div>
-        <div class="logout-link">
-          <%= link_to 'Logout', logout_path ,:class=>" card-link "%>
-        </div>
-      <%end%>
-    </div>
+    <%end%>
   </div>
-  <br>
-  <div class="btn-group" role="group" aria-label="Basic example">
-    <%= link_to 'Go back to home', root_url(:active=> @todo.active), :class=>"active-link btn Active" %>
+  <div class="current-user">
+    <%if   @current_user %>
+      <div class="user-name">
+        <%= @current_user.name %>
+      </div>
+      <div class="logout-link">
+        <%= link_to 'Logout', logout_path ,:class=>" card-link "%>
+      </div>
+    <%end%>
   </div>
-  <div class="todo-details">
+</div>
+<br>
+<div class="btn-group" role="group" aria-label="Basic example">
+  <%= link_to 'Go back to home', root_url(:active=> @todo.active), :class=>"active-link btn Active" %>
+</div>
+<div class="todo-details">
 
-      <div class="todo-body" id="todo-body"><%= @todo.body %></div>
-      <div class="todo-date small">
-        <%=@todo.created_at.strftime("%I.%M %P, %d %B %Y")%>
-      </div>
-      <div class="todo-id" style="display:none;">
-      <%=@todo.id%>
-      </div>
-
+  <div class="todo-body" id="todo-body"><%= @todo.body %></div>
+  <div class="todo-date small">
+    <%=@todo.created_at.strftime("%I.%M %P, %d %B %Y")%>
   </div>
-  <div class="btn-group todo-options">
-          <div class="todo-delete">
-            <%= link_to "×", todo_path(@todo,:value=>@todo.active),method: :delete,remote: true, data: { confirm: 'Are you sure?' } ,:class=>"card-link text-secondary-grey"%>
-           </div>
-          <div class="todo-activate">
-            <% if @todo.active==true%>
-              <%= link_to "✓", activate_todo_path(@todo),action: :active, method: :post,remote: true, class:" btn btn-circle text-lighter btn-sm text-center" %>
-            <% else %>
-              <%= link_to "✓", activate_todo_path(@todo),action: :active,  method: :post,remote: true, class:"btn btn-circle-inactive text-lighter btn-sm text-center" %>
-            <% end %>
-          </div>
+  <div class="todo-id" style="display:none;">
+    <%=@todo.id%>
+  </div>
 
-      </div>
-      <%= render @todo.comments %>
-      <%= render 'comments/form' %>
-  <div class="active-status"><%=@active%></div>
-    <label for="range">
-          <input type="range" name="range" class="slider" id="myRange" min="0" max="100" step="1" value="<%=@todo.status%>"/>
-          <output for="range" class="output"><%=@todo.status%>%</output>
-    </label>
-    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#myModal">
-   Share
- </button>
- <div class="modal fade" id="myModal">
+</div>
+<div class="btn-group todo-options">
+  <div class="todo-delete">
+    <%= link_to "×", todo_path(@todo,:value=>@todo.active),method: :delete,data: { confirm: 'Are you sure?' } ,:class=>"card-link text-secondary-grey"%>
+  </div>
+  <div class="todo-activate">
+    <% if @todo.active==true%>
+      <%= link_to "✓", activate_todo_path(@todo),action: :active, method: :post, class:" btn btn-circle text-lighter btn-sm text-center" %>
+    <% else %>
+      <%= link_to "✓", activate_todo_path(@todo),action: :active, method: :post, class:"btn btn-circle-inactive text-lighter btn-sm text-center" %>
+    <% end %>
+  </div>
+
+</div>
+<div>
+<label for="range">
+  <input type="range" name="range" class="slider" id="range" min="0" max="100" step="1" value="<%=@todo.status%>"/>
+  <output for="range" class="output"><%=@todo.status%></output>
+</label>
+</div>
+<%= render @todo.comments %>
+<%= render 'comments/form' %>
+<div class="active-status"><%=@active%></div>
+<%if @todo.shares.find_by(user_id: @current_user.id).is_owner %>
+<div>Shared with <% @todo.shares.each do |share|%>
+  <%=share.user.name if share.user!=@current_user%>
+  <%end%></div>
+  <button type="button" class="btn btn-light" data-toggle="modal" data-target="#myModal">
+    Share
+  </button>
+<% end %>
+<div class="modal fade" id="myModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
@@ -73,79 +80,99 @@
 
       <!-- Modal body -->
       <div class="modal-body">
+        <%= form_tag(share_todo_todo_path,method: :post,class: "seach-todo",action: "share_todo") do%>
         <%User.all.each do |user| %>
-        <%=user.name%>
+          <% if @todo.shares.find_by(user_id: user.id).nil? && @current_user.id != user.id%>
+            <%= check_box_tag 'users[]',user.id %><%= user.name%>
+          <%end%>
         <%end%>
       </div>
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
-      </div>
 
+        <%=submit_tag 'submit'%>
+      <%end%>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
     </div>
+    <div id='todoid'><%=@todo.id%></div>
   </div>
 </div>
+</div>
 
-  <script>
-    var last
-    $(".active-status").hide();
-    $(document).ready(function () {
-        var value = $(this).val().toLowerCase();
-      $("#myInput").val('').val('<%=@search%>').focus();
-      $("#myInput").on("keyup", function (e) {
-        if (e.which < 48 && e.which>8) {
-
-        }
-        else{
-        var value = $(this).val().toLowerCase();
-        var active = $(".active-status").text();
-        $('.seach-todo').submit( function(e) {
-        $("#myInput").focus().val(value);
-       });
-                  $.ajax({
-                  url: 'http://localhost:3000/todos',
-                  data: {search: value,active: active},
-                  dataType: "html",
-                  async: 'false',
-                  cache: 'false',
-                   type: "get",
-                  success: function(result) {
-                        $('.seach-todo').submit();
-
-                       }
-                    });
-        }
-      });
-        // $("#myTable tr").filter(function () {
-        //   $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        // });
-        $('#myRange').on("input", function() {
-          $(".slider::-webkit-slider-thumb").css('width','100%')
-        $('.output').val(this.value +"%" );
-        }).trigger("change");
-      $(".active-status").hide();
+<script>
+var last
+$(".active-status").hide();
+$(document).ready(function () {
+  var value = $(this).val().toLowerCase();
+  $("#myInput").val('').val('<%=@search%>').focus();
+  $("#myInput").on("keyup", function (e) {
+    if (e.which < 48 && e.which > 8) {} else {
+      var value = $(this).val().toLowerCase();
       var active = $(".active-status").text();
-      // console.log(active);
-      if (active == 1) {
-        $(".btn").removeClass("active-link-visited");
-        $(".Inactive").addClass("active-link-visited");
-      } else {
-        $(".btn").removeClass("active-link-visited");
-        $(".Active").addClass("active-link-visited");
-      }
-    $('#myTable tr ').each(function (i) {
-      $('.up-link', this).css('visibility','visible');
-      $('.down-link', this).css('visibility','visible');
-      if (i==0) {
-        $('.up-link', this).css('visibility','hidden');
-      }
-      last=i;
-    });
-    $('#myTable tr ').each(function(i) {
-      if (i==last){
-          $('.down-link',this).css('visibility','hidden');
+      $('.seach-todo').submit(function (e) {
+        $("#myInput").focus().val(value);
+      });
+      $.ajax({
+        url: 'http://localhost:3000/todos',
+        data: {
+          search: value,
+          active: active
+        },
+        dataType: "html",
+        async: 'false',
+        cache: 'false',
+        type: "get",
+        success: function (result) {
+          $('.seach-todo').submit();
+
         }
       });
-    });
-  </script>
+    }
+  });
+  // $("#myTable tr").filter(function () {   $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1) });
+  $('#range').on("input", function () {
+    $(".slider::-webkit-slider-thumb").css('width', '100%')
+    $('.output').val(this.value + "%");
+    progress=this.value;
+    todoid=String($('#todoid').text());
+    str1='http://localhost:3000/todos/';
+    url=str1.concat(todoid,'/update_progress');
+    $.ajax({
+    url: (url),
+    data: {progress: progress},
+    dataType: "html",
+    async: 'false',
+    cache: 'false',
+     type: "get",
+    success: function(result) {
+          // $('.seach-todo').submit();
+
+         }
+      });
+  }).trigger("change");
+  $(".active-status").hide();
+  var active = $(".active-status").text();
+  // console.log(active);
+  if (active == 1) {
+    $(".btn").removeClass("active-link-visited");
+    $(".Inactive").addClass("active-link-visited");
+  } else {
+    $(".btn").removeClass("active-link-visited");
+    $(".Active").addClass("active-link-visited");
+  }
+  $('#myTable tr ').each(function (i) {
+    $('.up-link', this).css('visibility', 'visible');
+    $('.down-link', this).css('visibility', 'visible');
+    if (i == 0) {
+      $('.up-link', this).css('visibility', 'hidden');
+    }
+    last = i;
+  });
+  $('#myTable tr ').each(function (i) {
+    if (i == last) {
+      $('.down-link', this).css('visibility', 'hidden');
+    }
+  });
+});
+</script>

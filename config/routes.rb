@@ -17,6 +17,8 @@ Rails.application.routes.draw do
       post :activate
       post :up
       post :down
+      post :share_todo
+      get :update_progress
     end
   end
   resources :users do
