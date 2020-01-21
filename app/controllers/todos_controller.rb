@@ -84,14 +84,28 @@ class TodosController < ApplicationController
 
   end
   def update_progress
-    p params
-    @comment = @todo.comments.build(description: params[:progress] ,user_id: @current_user.id)
+    progress=params[:progress].to_i
+    if (progress<100)
+      comment_body="Task has been updated from <span class='green-data'>#{@todo.status}%</span> to <span class='green-data'>#{progress}%</span>"
+    else
+      comment_body="Status of the task changed to <span class='green-data'>Done</span>"
+    end
+    @comment = @todo.comments.build(description: comment_body ,user_id: @current_user.id)
+    @todo.update(status: progress)
     if @comment.save!
       flash[:success] = 'Comment inserted Successfully'
-      redirect_to todo_path(@todo)
+      respond_to do |format|
+        format.html { render 'todos/show' }
+        format.json { head :no_content }
+        format.js { render layout: update_progress , :locals => {:id => @todo.id}  }
+      end
     else
       flash[:warning] = 'Cannot insert a blank comment'
-      redirect_to todo_path(@todo)
+      respond_to do |format|
+        format.html { render action: '/show' }
+        format.json { head :no_content }
+        format.js { render layout: false , :locals => {:id => @todo.id}  }
+      end
     end
   end
   private

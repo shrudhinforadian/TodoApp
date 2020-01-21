@@ -1,16 +1,21 @@
+<div id='comment-data'>
+  <hr class="horizontal-comment-line">
+  <div class="show_comment  mx-auto">
+    <div class="logo mb-3">
+      <div class="comment-body ">
+        <%= comment.description.html_safe %>
+      </div>
+      <br>
+      <div class="comment-user-time">
+        <span class="commenter">
+          <%=comment.user.name%>
+        </span>
+        <span class="comment-time">
+          on
+          <%=comment.created_at.strftime("%I.%M %P, %d %B %Y")%>
+        </span>
+      </div>
 
-  <div >
-<div class="show_article  mx-auto">
-  <div class="logo mb-3"><br>
-     <div class=" ">
-       <h5>
-
-       </h5>
-
-       <h5>
-         <strong></strong><%= comment.description %>
-
-     </div>
+    </div>
   </div>
-</div>
 </div>

@@ -14,19 +14,6 @@ class Todo < ApplicationRecord
   scope :select_by_active , -> (active) {where(active: active)}
   scope :search, ->(search) { where('body like ?', "%#{search}%") }
 
-  def priority_switch(symbol, todos)
-    up = symbol == 'up' ? todos.where("priority > ?", priority).last
-     : todos.where("priority < ?", priority).first
-    priority_temp = priority
-    change_priority(up.priority)
-    up.change_priority(priority_temp)
-    up
-  end
-
-  def change_priority(priority)
-    self.priority = priority
-    save!(validate: false)
-  end
 
   private
 

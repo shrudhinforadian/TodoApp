@@ -24,50 +24,63 @@
   </div>
 </div>
 <br>
-<div class="btn-group" role="group" aria-label="Basic example">
-  <%= link_to 'Go back to home', root_url(:active=> @todo.active), :class=>"active-link btn Active" %>
+<div class="link-back-home" role=" " aria-label=" ">
+  <%= link_to '< Go back to home', root_url(:active=> @todo.active), :class=>"back-to-home" %>
 </div>
-<div class="todo-details">
+<div class="todo-body-contents-show">
+  <div class="todo-body-with-delete">
+    <div class="todo-body-todo">
+      <div class="todo-body-main" id="todo-body"><%= @todo.body %></div>
+      <div class="todo-date small">
+        <%=@todo.created_at.strftime("%I.%M %P, %d %B %Y")%>
+      </div>
+    </div>
+    <div class="todo-id" style="display:none;">
+      <%=@todo.id%>
+    </div>
+    <div class="todo-delete-show">
+      <%= link_to "×", todo_path(@todo,:value=>@todo.active),method: :delete,data: { confirm: 'Are you sure?' } ,:class=>"delete-main card-link text-secondary-grey"%>
+    </div>
+  </div>
+  <div class="progress-bar-active-link">
+    <div class="progress-bar-title">Task completion</div>
 
-  <div class="todo-body" id="todo-body"><%= @todo.body %></div>
-  <div class="todo-date small">
-    <%=@todo.created_at.strftime("%I.%M %P, %d %B %Y")%>
-  </div>
-  <div class="todo-id" style="display:none;">
-    <%=@todo.id%>
-  </div>
 
-</div>
-<div class="btn-group todo-options">
-  <div class="todo-delete">
-    <%= link_to "×", todo_path(@todo,:value=>@todo.active),method: :delete,data: { confirm: 'Are you sure?' } ,:class=>"card-link text-secondary-grey"%>
-  </div>
-  <div class="todo-activate">
-    <% if @todo.active==true%>
-      <%= link_to "✓", activate_todo_path(@todo),action: :active, method: :post, class:" btn btn-circle text-lighter btn-sm text-center" %>
-    <% else %>
-      <%= link_to "✓", activate_todo_path(@todo),action: :active, method: :post, class:"btn btn-circle-inactive text-lighter btn-sm text-center" %>
-    <% end %>
-  </div>
+    <div class="progree-bar">
+      <label for="range">
+          <output for="range" class="output"><%=@todo.status%>%</output>
+        <input type="range" name="range" class="slider" id="progress" min="0" max="100" step="1" value="<%=@todo.status%>"/>
 
+      </label>
+    </div>
+
+    <div class="todo-activate-show">
+      <% if @todo.active==true%>
+        <%= link_to "✓", activate_todo_path(@todo),action: :active, method: :post, class:" btn btn-circle text-lighter btn-sm text-center active-button-show" %>
+      <% else %>
+        <%= link_to "✓", activate_todo_path(@todo),action: :active, method: :post, class:"btn btn-circle-inactive text-lighter btn-sm text-center active-button-show" %>
+      <% end %>
+    </div>
+  </div>
+  <%if @todo.shares.find_by(user_id: @current_user.id).is_owner %>
+  <div class='shared-status'>
+    <div class="shared-text"><span class="shared-with-text">Shared with : </span>
+      <% @todo.shares.each do |share|%>
+        <span><%="#{share.user.name} ,"   if share.user!=@current_user%> </span>
+      <%end%>
+    </div>
+    <div class="share-button-body">
+    <button type="button" class="btn share-button" data-toggle="modal" data-target="#myModal">
+      Share this
+    </button>
+    </div>
+  <% end %>
+  </div>
 </div>
-<div>
-<label for="range">
-  <input type="range" name="range" class="slider" id="range" min="0" max="100" step="1" value="<%=@todo.status%>"/>
-  <output for="range" class="output"><%=@todo.status%></output>
-</label>
-</div>
-<%= render @todo.comments %>
-<%= render 'comments/form' %>
+
+<div class="list-comments"><%= render @todo.comments %></div><br>
+<div class="create-new-todo"><%= render 'comments/form' %></div>
 <div class="active-status"><%=@active%></div>
-<%if @todo.shares.find_by(user_id: @current_user.id).is_owner %>
-<div>Shared with <% @todo.shares.each do |share|%>
-  <%=share.user.name if share.user!=@current_user%>
-  <%end%></div>
-  <button type="button" class="btn btn-light" data-toggle="modal" data-target="#myModal">
-    Share
-  </button>
-<% end %>
 <div class="modal fade" id="myModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -83,7 +96,10 @@
         <%= form_tag(share_todo_todo_path,method: :post,class: "seach-todo",action: "share_todo") do%>
         <%User.all.each do |user| %>
           <% if @todo.shares.find_by(user_id: user.id).nil? && @current_user.id != user.id%>
-            <%= check_box_tag 'users[]',user.id %><%= user.name%>
+            <div class="list-users-share">
+            <span class='checkbox-share'><%= check_box_tag 'users[]',user.id %></span>
+            <span class='checkbox-name'>  <%= user.name%></span>
+              </div>
           <%end%>
         <%end%>
       </div>
@@ -91,9 +107,9 @@
       <!-- Modal footer -->
       <div class="modal-footer">
 
-        <%=submit_tag 'submit'%>
+        <div class=""><%=submit_tag 'Save', :class=> 'submit-button-share'%></div>
       <%end%>
-      <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
+      <button type="button" class="cancel-button" data-dismiss="modal">Cancel</button>
     </div>
     <div id='todoid'><%=@todo.id%></div>
   </div>
@@ -103,53 +119,35 @@
 <script>
 var last
 $(".active-status").hide();
+$("#todoid").hide();
 $(document).ready(function () {
-  var value = $(this).val().toLowerCase();
-  $("#myInput").val('').val('<%=@search%>').focus();
-  $("#myInput").on("keyup", function (e) {
-    if (e.which < 48 && e.which > 8) {} else {
-      var value = $(this).val().toLowerCase();
-      var active = $(".active-status").text();
-      $('.seach-todo').submit(function (e) {
-        $("#myInput").focus().val(value);
-      });
+  // $("#myTable tr").filter(function () {   $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1) });
+  $('#progress').on("input", function () {
+    $(".slider::-webkit-slider-thumb").css('width', '100%')
+    $('.output').val(this.value + "%");
+    progress = this.value;
+    console.log(progress);
+    });
+    $('#progress').on("mouseup", function () {
+      progress = this.value;
+      todoid = String($('#todoid').text());
+      str1 = 'http://localhost:3000/todos/';
+      url = str1.concat(todoid, '/update_progress');
       $.ajax({
-        url: 'http://localhost:3000/todos',
+        url: (url),
         data: {
-          search: value,
-          active: active
+          progress: progress
         },
         dataType: "html",
         async: 'false',
         cache: 'false',
         type: "get",
         success: function (result) {
-          $('.seach-todo').submit();
-
-        }
-      });
-    }
-  });
-  // $("#myTable tr").filter(function () {   $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1) });
-  $('#range').on("input", function () {
-    $(".slider::-webkit-slider-thumb").css('width', '100%')
-    $('.output').val(this.value + "%");
-    progress=this.value;
-    todoid=String($('#todoid').text());
-    str1='http://localhost:3000/todos/';
-    url=str1.concat(todoid,'/update_progress');
-    $.ajax({
-    url: (url),
-    data: {progress: progress},
-    dataType: "html",
-    async: 'false',
-    cache: 'false',
-     type: "get",
-    success: function(result) {
           // $('.seach-todo').submit();
 
-         }
-      });
+        }
+
+    });
   }).trigger("change");
   $(".active-status").hide();
   var active = $(".active-status").text();
