@@ -67,7 +67,7 @@
   <div class='shared-status'>
     <div class="shared-text"><span class="shared-with-text">Shared with : </span>
       <% @todo.shares.each do |share|%>
-        <span><%="#{share.user.name} ,"   if share.user!=@current_user%> </span>
+        <span class="user-shared"><%="#{share.user.name} ,"   if share.user!=@current_user%> </span>
       <%end%>
     </div>
     <div class="share-button-body">
