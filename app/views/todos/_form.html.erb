@@ -4,17 +4,17 @@
     <%= form_with(model: [ @current_user, @current_user.todos.build ],
     remote: true) do |form| %>
 
-    <p >
+
       <%= form.text_field :body ,:class=>"input-todo form-control",
       :placeholder=>"Enter todo" ,:id=>"enter-todo focusedInput",
       remote: true, minlength: 8%>
-    </p>
+
 
   </div>
 <% end %>
 
 </div>
-<div>
+
 <script>
   $(document).ready(function () {
     $(".input-todo").on("keyup", function (e) {
