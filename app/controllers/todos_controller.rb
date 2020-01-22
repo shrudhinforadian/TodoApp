@@ -109,12 +109,8 @@ class TodosController < ApplicationController
       # render @todo.comments
       redirect_to todo_path(@todo)
     else
-      flash[:warning] = 'Cannot insert a blank comment'
-      respond_to do |format|
-        format.html { render action: '/show' }
-        format.json { head :no_content }
-        format.js { render layout: false, locals: { id: @todo.id } }
-      end
+      flash[:warning] = 'Cannot insert this comment comment'
+      redirect_to todo_path(@todo)
     end
   end
 
