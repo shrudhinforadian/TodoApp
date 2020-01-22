@@ -48,8 +48,9 @@
 
     <div class="progree-bar">
       <label for="range">
+        <output for="range" class="output-np"><%=@todo.status%></output>
           <output for="range" class="output"><%=@todo.status%>%</output>
-        <input type="range" name="range" class="slider" id="progress" min="0" max="100" step="1" value="<%=@todo.status%>"/>
+        <input type="range" name="range" class="slider" id="progress" min="0" max="100" step="1" value="<%=@todo.status %> " />
 
       </label>
     </div>
@@ -87,19 +88,22 @@
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Add People to this task</h4>
+        <div class="share-title">Add People to this task</div>
         <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
       </div>
 
       <!-- Modal body -->
       <div class="modal-body">
-        <%= form_tag(share_todo_todo_path,method: :post,class: "seach-todo",action: "share_todo") do%>
+        <%= form_tag(share_todo_todo_path,method: :post,class: "seach-todo",action: "share_todo" ,remote: true) do%>
         <%User.all.each do |user| %>
-          <% if @todo.shares.find_by(user_id: user.id).nil? && @current_user.id != user.id%>
-            <div class="list-users-share">
-            <span class='checkbox-share'><%= check_box_tag 'users[]',user.id %></span>
-            <span class='checkbox-name'>  <%= user.name%></span>
-              </div>
+          <% if @todo.shares.find_by(user_id: user.id).nil? && @current_user.id != user.id && user.email_confirmed%>
+          <div class="list-users-share">
+          <label class="control control-checkbox">
+            <%= user.name%>
+            <%= check_box_tag 'users[]',user.id, false,:class=>" " %>
+            <div class="control_indicator"></div>
+        </label>
+        </div>
           <%end%>
         <%end%>
       </div>
@@ -118,36 +122,46 @@
 
 <script>
 var last
+$('.output-np').hide();
 $(".active-status").hide();
 $("#todoid").hide();
 $(document).ready(function () {
+  var s = $('#progress');
+  p=($('.output-np').val());
+  s.val(p);
+  // s.slider('refresh');
+  s.trigger('slide',{ ui: $('.ui-slider-handle', s), value: 10 });
+    // $('#progress').slider('value',$(".output").text());
   // $("#myTable tr").filter(function () {   $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1) });
   $('#progress').on("input", function () {
-    $(".slider::-webkit-slider-thumb").css('width', '100%')
+    $(".slider::-webkit-slider-thumb").css('width', '100px')
     $('.output').val(this.value + "%");
     progress = this.value;
     console.log(progress);
-    });
+    }).trigger("change");
     $('#progress').on("mouseup", function () {
       progress = this.value;
-      todoid = String($('#todoid').text());
-      str1 = 'http://localhost:3000/todos/';
-      url = str1.concat(todoid, '/update_progress');
-      $.ajax({
-        url: (url),
-        data: {
-          progress: progress
-        },
-        dataType: "html",
-        async: 'false',
-        cache: 'false',
-        type: "get",
-        success: function (result) {
-          // $('.seach-todo').submit();
+      if (progress != p){
+          todoid = String($('#todoid').text());
+          str1 = 'http://localhost:3000/todos/';
+          url = str1.concat(todoid, '/update_progress');
+          $.ajax({
+            url: (url),
+            data: {
+              progress: progress
+            },
+            dataType: "html",
+            async: 'false',
+            cache: 'false',
+            type: "post",
+            success: function (result) {
+              // $('#progress').submit();
+              location.reload();
 
-        }
+            }
 
     });
+  }
   }).trigger("change");
   $(".active-status").hide();
   var active = $(".active-status").text();
