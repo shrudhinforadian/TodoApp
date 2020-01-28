@@ -30,8 +30,7 @@ class Todo < ApplicationRecord
 
   def create_share(users)
     return if users.nil?
-    
-    p users.nil?
+
     users.each do |i|
       share = self.shares.build(user_id: i.to_i)
       share.save!
