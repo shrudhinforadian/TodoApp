@@ -1,5 +1,5 @@
 var last
-var upbody= '<%= @up.id%>';
+var upbody= '<%= @switch_up.todo.id%>';
 $('#myTable tr ').each(function(i) {
    var upid=Number($(" .todo-id",this ).text());
    var uptr=$(this).closest('tr').html();

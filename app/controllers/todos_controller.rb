@@ -20,16 +20,8 @@ class TodosController < ApplicationController
   # sharing to to other users
   def share_todo
     users = params[:users]
-    if users.nil?
-      flash.now[:danger] = 'No users selected'
-      redirect_to todo_path(@todo)
-    else
-      users.each do |i|
-        p i.to_i
-        User.find(i.to_i).todos << @todo
-      end
-      redirect_to todo_path(@todo)
-     end
+    @todo.create_share(users)
+    redirect_to todo_path(@todo)
   end
 
   # creating new todo object
@@ -57,16 +49,15 @@ class TodosController < ApplicationController
 
   # changing priority to down
   def down
-    symbol = 'down'
-    @share.priority_switch(symbol, @shares)
+    direction = 'down'
+    @switch_down = @share.priority_switch(direction, @todo_shares)
     page_rendering
   end
 
   # changing priority to up
   def up
-    symbol = 'up'
-    @up = @share.priority_switch(symbol, @shares)
-    @up = @up.todo
+    direction = 'up'
+    @switch_up = @share.priority_switch(direction, @todo_shares)
     page_rendering
   end
 
@@ -94,24 +85,8 @@ class TodosController < ApplicationController
 
   def update_progress
     progress = params[:progress].to_i
-    if progress < 100
-      comment_body = "Task has been updated from <span class='green-data'>
-      #{@todo.status}%</span> to <span class='green-data'>#{progress}%</span>"
-    else
-      comment_body = "Status of the task changed to
-      <span class='green-data'>Done</span>"
-    end
-    @comment = @todo.comments.build(description: comment_body,
-       user_id: @current_user.id)
-    @todo.update(status: progress)
-    if @comment.save!
-      flash[:success] = 'Comment inserted Successfully'
-      # render @todo.comments
-      redirect_to todo_path(@todo)
-    else
-      flash[:warning] = 'Cannot insert this comment comment'
-      redirect_to todo_path(@todo)
-    end
+    comment_body = @todo.create_progress(progress,@current_user.id)
+    redirect_to todo_path(@todo)
   end
 
   private
@@ -150,7 +125,7 @@ class TodosController < ApplicationController
   end
 
   def current_user_shares
-    @shares = @current_user.shares.joins("left outer join todos on todos.
+    @todo_shares = @current_user.shares.joins("left outer join todos on todos.
       id=shares.todo_id and todos.active=#{@active}").sort_by_priority
   end
 end

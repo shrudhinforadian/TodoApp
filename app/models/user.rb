@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
     save!(validate: false)
   end
 
+
   private
 
   def confirmation_token

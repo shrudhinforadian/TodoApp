@@ -6,4 +6,7 @@ class Comment < ApplicationRecord
   validates :user_id, presence: true
   validates :todo_id, presence: true
   validates :description, presence: true
+
+
+
 end
