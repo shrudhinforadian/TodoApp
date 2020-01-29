@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Todo < ApplicationRecord
-  # belongs_to :user
+  # after_create :create_self_share
   has_many :comments, dependent: :destroy
   has_many :users, through: :shares
   has_many :shares, dependent: :destroy
@@ -26,6 +26,10 @@ class Todo < ApplicationRecord
                               user_id: user_id)
     update(status: progress)
     @comment.save!
+  end
+
+  def create_self_share(user_id)
+    share = shares.build(user_id: user_id)
   end
 
   def create_share(users)

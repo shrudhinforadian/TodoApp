@@ -12,15 +12,18 @@ class SessionsController < ApplicationController
 
   def create
     user = User.find_by_email(params[:email].downcase)
-    return unless user.email_confirmed
+    return  redirect_to sessions_path,
+    flash: { danger: 'User does not exist' } if user.nil?
 
-    if user&.authenticate(params[:password])
-      session[:user_id] = user.id
-      redirect_to :todos, flash: { success: 'Successfully Logged in' }
-    else
-      flash.now[:danger] = 'Invalid email/password combination'
-      render 'new'
-    end
+    return  redirect_to sessions_path,
+     flash: { warning: 'Please confirm your email' } unless user.email_confirmed
+
+    return  redirect_to sessions_path,
+     flash: { danger: 'password is incorrect' } if user&.
+     authenticate(params[:password])
+
+    session[:user_id] = user.id
+    redirect_to :todos, flash: { success: 'Successfully Logged in' }
   end
 
   # log outing the current_user

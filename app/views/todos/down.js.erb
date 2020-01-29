@@ -1,16 +1,5 @@
 var last
-var upbody= '<%= @todo.id%>';
-$('#myTable tr ').each(function(i) {
-   var upid=Number($(" .todo-id",this ).text());
-   var uptr=$(this).closest('tr').html();
-   var downtr=$(this).next('tr').html();
-   if (upid==upbody ){
-     $(this).closest('tr').html(downtr);
-     $(this).next('tr').html(uptr);
-     upbody=0;
-  }
-  last=i;
-});
+
 $('#myTable tr ').each(function(i) {
   $('.up-link',this).css('visibility','visible');
   $('.down-link',this).css('visibility','visible');

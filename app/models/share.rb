@@ -6,6 +6,7 @@ class Share < ApplicationRecord
   belongs_to :user
   belongs_to :todo
   validates :user_id, presence: true
+  # before_destroy :check_is_owner
   # validates :todo_id, presence: true
   scope :sort_by_priority, -> { order(priority: :desc) }
   scope :select_by_owner, ->(id) { where(todo_id: id, is_owner: 1) }
@@ -17,6 +18,11 @@ class Share < ApplicationRecord
     change_priority(switch.priority)
     switch.change_priority(priority_temp)
     switch
+  end
+
+  def destroy_share(todo)
+      todo.destroy if self.is_owner
+      self.destroy
   end
 
   def change_priority(priority)

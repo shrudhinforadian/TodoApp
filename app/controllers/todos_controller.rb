@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 class TodosController < ApplicationController
-  before_action :find_todo_by_user, only: %i[destroy show activate up down
+  before_action :find_todo_by_user, only: %i[destroy show activate switch
                                              share_todo update_progress]
-  before_action :find_share_by_user, only: %i[up down]
-  before_action :current_active, only: %i[activate down up destroy]
-  before_action :list_todos, only: %i[create activate down up destroy]
-  before_action :current_user_shares, only: %i[down up]
+  before_action :find_share_by_user, only: %i[switch]
+  before_action :current_active, only: %i[activate switch destroy]
+  before_action :list_todos, only: %i[create activate switch destroy]
+  before_action :current_user_shares, only: %i[switch]
   respond_to :html, :js
 
   # fetching all todos of current user
@@ -32,14 +32,14 @@ class TodosController < ApplicationController
   # creating new todo with params
   def create
     @todo = @current_user.todos.build(todo_params)
+    @todo.create_self_share(@current_user.id)
     list_todos
     if @todo.save
-      @current_user.todos << @todo
-      page_rendering
+      flash.now[:success] = 'Todo inserted Successfully'
     else
       flash.now[:danger] = 'Todo cannot be inserted'
-      page_rendering
     end
+    page_rendering
   end
 
   def activate
@@ -47,38 +47,18 @@ class TodosController < ApplicationController
     page_rendering
   end
 
-  # changing priority to down
-  def down
-    direction = 'down'
-    @switch_down = @share.priority_switch(direction, @todo_shares)
-    page_rendering
-  end
-
-  # changing priority to up
-  def up
-    direction = 'up'
-    @switch_up = @share.priority_switch(direction, @todo_shares)
+  # switching priority
+  def switch
+    @direction=params[:direction]
+    @switch_up = @share.priority_switch(@direction, @todo_shares)
     page_rendering
   end
 
   # deleting selected todo
   def destroy
     shared = @todo.shares.find_by(user_id: @current_user.id)
-    if shared.is_owner
-      if @todo.destroy
-        page_rendering
-      else
-        flash.now[:danger] = 'Todo cannot be Deleted'
-        page_rendering
-      end
-    else
-      if shared.destroy
-        page_rendering
-      else
-        flash.now[:danger] = 'Share cannot be removed'
-        page_rendering
-      end
-    end
+    shared.destroy_share(@todo)
+    page_rendering
   end
 
   def show; end

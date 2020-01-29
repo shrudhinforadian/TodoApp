@@ -13,12 +13,12 @@
   <div class="btn-group todo-options">
           <td class="todo-options">
             <div class="arrow-up">
-              <%= link_to "⌃", up_todo_path(todo), action: :active,method: :post,remote: true,:class=>"card-link text-secondary-grey up-link"%>
+              <%= link_to "⌃", switch_todo_path(todo,:direction=> "up"), action: :active,method: :post,remote: true,:class=>"card-link text-secondary-grey up-link"%>
             </div>
           </td>
           <td class="todo-options">
             <div class="arrow-down">
-              <%= link_to "⌄",down_todo_path(todo),action: :active,remote: true, method: :post, :class=>"card-link text-secondary-grey down-link"%>
+              <%= link_to "⌄",switch_todo_path(todo,:direction=> "down"),action: :active,remote: true, method: :post, :class=>"card-link text-secondary-grey down-link"%>
               </div>
           </td>
         <td class="todo-options">

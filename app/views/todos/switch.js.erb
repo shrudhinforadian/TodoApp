@@ -1,5 +1,10 @@
 var last
+var direction= '<%= @direction%>';
+if (String(direction) == 'down'){
+  var upbody= '<%= @todo.id%>';}
+else {
 var upbody= '<%= @switch_up.todo.id%>';
+}
 $('#myTable tr ').each(function(i) {
    var upid=Number($(" .todo-id",this ).text());
    var uptr=$(this).closest('tr').html();

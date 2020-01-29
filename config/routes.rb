@@ -15,8 +15,7 @@ Rails.application.routes.draw do
 
     member do
       post :activate
-      post :up
-      post :down
+      post :switch
       post :share_todo
       post :update_progress
     end
