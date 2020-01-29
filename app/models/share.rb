@@ -11,12 +11,12 @@ class Share < ApplicationRecord
   scope :select_by_owner, ->(id) { where(todo_id: id, is_owner: 1) }
 
   def priority_switch(direction, shares)
-    switch_up = direction == 'up' ? shares.where('priority > ?', priority).last
+    switch = direction == 'up' ? shares.where('priority > ?', priority).last
      : shares.where('priority < ?', priority).first
     priority_temp = priority
-    change_priority(switch_up.priority)
-    switch_up.change_priority(priority_temp)
-    up
+    change_priority(switch.priority)
+    switch.change_priority(priority_temp)
+    switch
   end
 
   def change_priority(priority)

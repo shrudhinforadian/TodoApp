@@ -2,7 +2,7 @@
 
 class TodosController < ApplicationController
   before_action :find_todo_by_user, only: %i[destroy show activate up down
-     share_todo update_progress]
+                                             share_todo update_progress]
   before_action :find_share_by_user, only: %i[up down]
   before_action :current_active, only: %i[activate down up destroy]
   before_action :list_todos, only: %i[create activate down up destroy]
@@ -85,7 +85,7 @@ class TodosController < ApplicationController
 
   def update_progress
     progress = params[:progress].to_i
-    comment_body = @todo.create_progress(progress,@current_user.id)
+    comment_body = @todo.create_progress(progress, @current_user.id)
     redirect_to todo_path(@todo)
   end
 

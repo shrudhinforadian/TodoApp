@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
 
   def create
     user = User.find_by_email(params[:email].downcase)
-    return if user.email_confirmed
+    return unless user.email_confirmed
 
     if user&.authenticate(params[:password])
       session[:user_id] = user.id
@@ -26,6 +26,6 @@ class SessionsController < ApplicationController
   # log outing the current_user
   def destroy
     session[:user_id] = nil
-    redirect_to 'login', flash: { info: 'Logged Out' }
+    redirect_to sessions_path, flash: { info: 'Logged Out' }
   end
 end
