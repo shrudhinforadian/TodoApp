@@ -19,7 +19,7 @@ class SessionsController < ApplicationController
      flash: { warning: 'Please confirm your email' } unless user.email_confirmed
 
     return  redirect_to sessions_path,
-     flash: { danger: 'password is incorrect' } if user&.
+     flash: { danger: 'password is incorrect' } unless user&.
      authenticate(params[:password])
 
     session[:user_id] = user.id
