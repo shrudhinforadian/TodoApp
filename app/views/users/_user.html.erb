@@ -2,7 +2,7 @@
   <div class="list-users-share">
     <label class="control control-checkbox">
       <%= user.name%>
-      <%= check_box_tag 'users[]',user.id, false,:class=>" " %>
+      <%= check_box_tag 'users[]',user.id, false,:class=>" ",:id=>user.id %>
       <div class="control_indicator"></div>
     </label>
   </div>
