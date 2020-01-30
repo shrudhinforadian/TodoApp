@@ -3,7 +3,7 @@ if($(".active-status").text()==1){
   $('#myTable').prepend('<%= j render @todo %>');
 }
 else {
-    console.log('in-active');
+
   var delimiter =
           $('<div class="page-delimiter" data-page="<%= params[:page] %>"></div>');
   $('#myTable').append(delimiter);

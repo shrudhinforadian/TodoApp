@@ -1,0 +1,9 @@
+<% if  @current_user.id != user.id && user.email_confirmed%>
+  <div class="list-users-share">
+    <label class="control control-checkbox">
+      <%= user.name%>
+      <%= check_box_tag 'users[]',user.id, false,:class=>" " %>
+      <div class="control_indicator"></div>
+    </label>
+  </div>
+<%end%>

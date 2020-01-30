@@ -1,6 +1,6 @@
 <div class="container">
   <div class="section-image">
-    <%= image_tag "check.png" %>
+    <a href="<%=root_url%>" ><%= image_tag "check.png" %></a>
   </div>
   <div class="header-section">
     <!-- <div class="search-input"> <div> -->
@@ -25,7 +25,7 @@
   </div>
   <br>
   <div><%= render 'form' %></div>
-  <div class="btn-group" role="group" aria-label="Basic example">
+  <div class="btn-group active-inactive" role="group" aria-label="Basic example">
     <%= link_to 'Active', root_url(:active=> 1), :class=>"active-link btn Active",:val=>1 %>
     <%= link_to 'Inactive', root_url(:active=>0), :class=>"active-link btn Inactive ",:id=>0 %>
   </div>
@@ -84,7 +84,7 @@
 
       $(".active-status").hide();
       var active = $(".active-status").text();
-      // console.log(active);
+
       if (active == 1) {
         $(".btn").removeClass("active-link-visited");
         $(".Inactive").addClass("active-link-visited");

@@ -1,6 +1,6 @@
 <div class="container">
   <div class="section-image">
-    <%= image_tag "check.png" %>
+    <a href="<%=root_url%>" ><%= image_tag "check.png" %></a>
   </div>
   <div class="header-section">
     <!-- <div class="search-input"> <div> -->
@@ -57,18 +57,20 @@
 
     <div class="todo-activate-show">
       <% if @todo.active==true%>
-        <%= link_to "✓", activate_todo_path(@todo),action: :active, method: :post, class:" btn btn-circle text-lighter btn-sm text-center active-button-show" %>
+        <%= link_to "✓", activate_todo_path(@todo),action: :active ,:remote=> true, method: :post, class:"active btn btn-circle text-lighter btn-sm text-center active-button-show" %>
       <% else %>
-        <%= link_to "✓", activate_todo_path(@todo),action: :active, method: :post, class:"btn btn-circle-inactive text-lighter btn-sm text-center active-button-show" %>
+        <%= link_to "✓", activate_todo_path(@todo),action: :active ,:remote=> true , method: :post, class:"active btn btn-circle-inactive btn-circle text-lighter btn-sm text-center active-button-show" %>
       <% end %>
     </div>
   </div>
+  <%current_shares=@todo.shares%>
+  <%userid=current_shares.map {|i| i.user_id}%>
+  <% shared_users = current_shares.map {|i| i.user.name if @current_user!=i.user } %>
   <%if @todo.shares.find_by(user_id: @current_user.id).is_owner %>
   <div class='shared-status'>
     <div class="shared-text"><span class="shared-with-text">Shared with : </span>
-      <% @todo.shares.each do |share|%>
-        <span class="user-shared"><%="#{share.user.name} ,"   if share.user!=@current_user%> </span>
-      <%end%>
+
+        <span class="user-shared"><%="#{shared_users.reject(&:blank?).join(' , ')} "   %> </span>
     </div>
     <div class="share-button-body">
     <button type="button" class="btn share-button" data-toggle="modal" data-target="#myModal">
@@ -92,21 +94,14 @@
         <div class="share-title">Add People to this task</div>
         <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
       </div>
-
+      <%@users=User.all.where.not(id: userid)%>
       <!-- Modal body -->
       <div class="modal-body">
         <%= form_tag(share_todo_todo_path,method: :post,class: "seach-todo",action: "share_todo" ,remote: true) do%>
-        <%User.all.each do |user| %>
-          <% if @todo.shares.find_by(user_id: user.id).nil? && @current_user.id != user.id && user.email_confirmed%>
-          <div class="list-users-share">
-          <label class="control control-checkbox">
-            <%= user.name%>
-            <%= check_box_tag 'users[]',user.id, false,:class=>" " %>
-            <div class="control_indicator"></div>
-        </label>
-        </div>
-          <%end%>
-        <%end%>
+
+            <%= render @users %>
+
+
       </div>
 
       <!-- Modal footer -->
@@ -138,7 +133,6 @@ $(document).ready(function () {
     $(".slider::-webkit-slider-thumb").css('width', '100px')
     $('.output').val(this.value + "%");
     progress = this.value;
-    console.log(progress);
     }).trigger("change");
     $('#progress').on("mouseup", function () {
       progress = this.value;
@@ -166,7 +160,6 @@ $(document).ready(function () {
   }).trigger("change");
   $(".active-status").hide();
   var active = $(".active-status").text();
-  // console.log(active);
   if (active == 1) {
     $(".btn").removeClass("active-link-visited");
     $(".Inactive").addClass("active-link-visited");

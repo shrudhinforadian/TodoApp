@@ -1,9 +1,14 @@
 var active_index;
-$('#myTable tr td .todo-id ').each(function(i) {
-   var body=Number($(this ).text());
+
+$('#myTable tr   ').each(function(i) {
+   var body=Number($('.todo-id',this).text());
    var comp= Number('<%= @todo.id%>');
+   console.log(body);
+   console.log(comp);
    if (body==comp){
-    $(this ).parents("tr").remove();
+     // console.log($(".active",this))
+    // $(" .active",this).removeClass("btn-circle");
+    $(".active",this).toggleClass("btn-circle-inactive");
     active_index=i;
   }
   last=i;

@@ -18,20 +18,20 @@
           </td>
           <td class="todo-options">
             <div class="arrow-down">
-              <%= link_to "⌄",switch_todo_path(todo,:direction=> "down"),action: :active,remote: true, method: :post, :class=>"card-link text-secondary-grey down-link"%>
+              <%= link_to "⌄",switch_todo_path(todo,:direction=> "down"),action: :active,remote: true, method: :post, :class=>"card-link text-secondary-grey down-link "%>
               </div>
           </td>
         <td class="todo-options">
           <div class="todo-delete">
-            <%= link_to "×", todo_path(todo,:value=>todo.active),method: :delete,remote: true, data: { confirm: 'Are you sure?' } ,:class=>"card-link text-secondary-grey"%>
+            <%= link_to "×", todo_path(todo,:value=>todo.active),method: :delete,remote: true, data: { confirm: 'Are you sure?' } ,:class=>"card-link text-secondary-grey "%>
            </div>
         </td>
         <td class="todo-options">
           <div class="todo-activate">
             <% if todo.active==true%>
-              <%= link_to "✓", activate_todo_path(todo),action: :active, method: :post,remote: true, class:" btn btn-circle text-lighter btn-sm text-center" %>
+              <%= link_to "✓", activate_todo_path(todo),action: :active, method: :post,remote: true, class:" btn btn-circle text-lighter btn-sm text-center active" %>
             <% else %>
-              <%= link_to "✓", activate_todo_path(todo),action: :active,  method: :post,remote: true, class:"btn btn-circle-inactive text-lighter btn-sm text-center" %>
+              <%= link_to "✓", activate_todo_path(todo),action: :active,  method: :post,remote: true, class:"btn btn-circle-inactive btn-circle text-lighter btn-sm text-center active" %>
             <% end %>
           </div>
         </td>
